@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+</head>
+<body>
+    <div id="controller">
+     
+        <div class="controller-left"><h3>Drawing App</h3>
+          
+        </div>
+        <div class="colors">
+         <span>Select color:</span> <input  id="base" type="color" name="color" value="#FF0000"></input>
+         <span>Select stroke width:</span><input id="spacing" type="range" name="spacing" min="2" max="40" value="2" data-sizing="px"> <span>in PX</span>
+          
+        </div> 
+      </div>
+<canvas id="draw" width="800" height="800"></canvas>
+
+<script>
+    const canvas = document.querySelector("#draw");
+    const ctx = canvas.getContext("2d");
+    // resize the canvas programmatically
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+    // variable checking if it should paint or not
+    let painting = false; // initially false
+    // variable for color and stroke width 
+
+    let colorValue = "#FF0000" ; 
+    let strokeWidth = 10 ; 
+
+     function startPaint(e){ // changes painting status to true
+       
+        painting = true;
+        draw(e);
+        
+         } 
+     function endPaint(){  // reset the begining path after mouse is up
+       painting = false;
+       ctx.beginPath(); 
+       
+       } // disable painting
+     // main drawing funciton 
+     function draw(e){
+       if(!painting) return; 
+       
+       ctx.lineWidth = strokeWidth; 
+       ctx.lineCap = "round"; 
+       ctx.lineTo(e.clientX, e.clientY);
+       ctx.stroke();
+       ctx.strokeStyle = colorValue;
+     }
+     // function to handle update when user changes color or stroke
+
+     function handleUpdate(){
+       
+         
+          colorValue = `${this.value}`; 
+
+          strokeWidth = this.value;
+     }
+
+   // event listners assigns to mouse and keyboard action
+   canvas.addEventListener('mousemove', draw);
+   canvas.addEventListener('mousedown', startPaint);
+   canvas.addEventListener('mouseup', endPaint);
+   canvas.addEventListener('mouseout',endPaint);
+
+  // getting controller and listening their event
+
+  const inputs = document.querySelectorAll(".colors input");
+  
+  inputs.forEach(input => input.addEventListener("change", handleUpdate));
+  inputs.forEach(input => input.addEventListener("mousemove", handleUpdate));
+
+
+   </script>
+
+<style>
+  html, body {
+    margin: 0;
+  }
+  #draw{
+    border:1px solid red;
+
+  }
+  #controller{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    background-color: rgb(160, 238, 212);
+
+  }
+  .controller-left{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    padding : 0 10px 0 10px;
+    margin : 0 10px 0 10px;
+  }
+  .colors span{
+    font-size: 18px;
+    font-weight: 600;
+    padding: 9px;
+  }
+  .colors input{
+    display:inline-block;
+    align-items: center;
+
+  }
+</style>
+
+</body>
+</html>
